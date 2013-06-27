@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='cache-control' content='no-cache'>
+<meta http-equiv='expires' content='0'>
+<meta http-equiv='pragma' content='no-cache'>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.0.custom.min.js"></script>
+<link rel="stylesheet" href="css/ui-darkness/jquery-ui-1.10.0.custom.min.css" />
+<script type="text/javascript">
+
+var postUrlRoot = '/bge/';
+var alreadySending = false;
+
+//Get all gameobjects to use for webUI in JSON object
+//and send directly to createUI method
+function bws_getGameObjects() {
+    //alert("getGameObjects");
+    jQuery.getJSON(postUrlRoot, "", function(data) {
+        bws_createUI(data);
+    });
+}
+
+//Send data to appie server through JSON
+function bws_sendChangedData(url, data) {
+    if (!alreadySending) {
+        alreadySending = true;
+        //not using jQuery.post() because of wrong content-type
+        data=JSON.stringify(data);
+        jQuery.ajax({
+            url:url,
+            type:"POST",
+            data:data,
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            success: bws_parseResponse
+        });
+    }
+}
+
+//just output the response in id='response'
+function bws_parseResponse(responseData) {
+    if (alreadySending) alreadySending = false;
+    jQuery('#response').html(responseData);
+}
+
+//attach data to html object with supplied ID
+function dws_attachDataToObj(id, objName, propName) {
+    //actualy this could be done differently by just using euhmmmm FIXME
+    jQuery('#'+id).data("bws", { objName: objName, propName: propName});
+}
+
+//Create a button including interactivity methods
+function bws_createButton(objName, propName, prop) {
+
+    //just some text
+    var res = '<p>' + propName + ' : ' + prop + '</p>';
+
+    //create a unique id
+    id = objName + '_' + propName + '_' + 'button';
+
+    //create a html obj for the button with an id
+    res += '<button id="' + id +'"></button>';
+
+    //add the html code to the page
+    jQuery('#tabs'+'-'+name).append(res);
+    
+    //http://api.jqueryui.com/button/
+    dws_attachDataToObj(id, objName, propName);
+    jQuery('#'+id).click(function( event ) {
+        var target = jQuery(event.target);
+        var value = true;
+        var jData = new Object;
+        objName = target.data("bws")["objName"];
+        propName = target.data("bws")["propName"];
+        jData[propName] = value;
+        bws_sendChangedData(postUrlRoot+objName, jData);
+    });
+}
+
+//Create a checkbox including interactivity methods
+function bws_createCheckbox(objName, propName, prop) {
+
+    //just some text
+    var res = '<p>' + propName + ' : ' + prop + '</p>';
+    //create a unique id
+    id = objName + '_' + propName + '_checkbox';
+
+    //add checkbox with id and name and optional pre-selection
+    if (prop) {
+        checked = 'checked="checked"';
+        //alert(Object.prototype.toString.call(prop) +":2:"+ prop);
+    } else {
+        checked = '';
+    }
+    res += '<input type="checkbox" name="' + propName +'" id="' + id +'" '+checked+' />';
+
+    //add the html code to the page
+    jQuery('#tabs'+'-'+objName).append(res);
+    
+    //attach data to html object
+    dws_attachDataToObj(id, objName, propName);
+    jQuery('#'+id).click(function( event ) {
+        var target = jQuery(event.target);
+        //event.preventDefault();
+        //alert(target.is(':checked'));
+        var value = target.is(':checked');
+        var jData = new Object;
+        var val = {};
+        objName = target.data("bws")["objName"];
+        propName = target.data("bws")["propName"];
+        jData[propName] = value;
+        bws_sendChangedData(postUrlRoot+objName, jData);
+    });
+}
+
+function bws_createSlider(objName, propName, prop) {
+
+    //create a unique id
+    id = objName + '_' + propName + '_' + 'slider';
+    //just some text
+    var res = '<p id='+id+'_value>' + propName + ' : ' + prop + '</p>';
+
+    //create a div for the slider
+    res += '<div id="' + id +'"></div>';
+
+    //add the html code to the page
+    jQuery('#tabs'+'-'+objName).append(res);
+    //attach data to html object
+    dws_attachDataToObj(id, objName, propName);
+    //http://api.jqueryui.com/slider/
+    jQuery('#'+id).slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 100,
+        value: prop,
+        slide: function( event, ui ) {
+            var target = jQuery(event.target);
+            var value = ui.value;
+            var jData = new Object;
+            objName = target.data("bws")["objName"];
+            propName = target.data("bws")["propName"];
+            jData[propName] = value;
+            jQuery('#'+target.attr('id')+'_value').html(propName+' : '+value);
+            bws_sendChangedData(postUrlRoot+objName, jData);
+        },
+        stop: function( event, ui ) {
+            var target = jQuery(event.target);
+            var value = ui.value;
+            var jData = new Object;
+            objName = target.data("bws")["objName"];
+            propName = target.data("bws")["propName"];
+            jData[propName] = value;
+            jQuery('#'+target.attr('id')+'_value').html(propName+' : '+value);
+            //force send!
+            alreadySending = false;
+            bws_sendChangedData(postUrlRoot+objName, jData);
+        }
+    });
+}
+
+function createGameObjectUI(name, object){
+    var resTab ='<li>';
+    resTab += '<a href="#tabs-' + name + '">' + name + '</a>';
+    resTab += '</li>'; 
+    jQuery('#tabs ul').append(resTab);
+    //alert(resTab);
+    
+    var res = '<div id="tabs-' + name + '">';
+    res += '<p>iets ' +name +'</p>';
+    jQuery('#tabs').append(res);
+    for (prop in object) {
+        //alert(jQuery.type(object[prop]));
+        if (jQuery.type(object[prop]) === "boolean") {
+            bws_createCheckbox(name, prop, object[prop]);
+        }
+        else if (jQuery.type(object[prop]) === "number") {
+            bws_createSlider(name, prop, object[prop]);
+        }
+        else if (jQuery.type(object[prop]) === "string") {
+            res += "</div>";
+            jQuery('#tabs').append(res);
+        }
+        else {
+            res += '<p>' + prop + ' : ' + object[prop] + '</p>';
+            res += "</div>";
+            jQuery('#tabs').append(res);
+        }
+    }
+    //alert(res);
+}
+
+function bws_createUI(gameObjects) {
+    //var res;
+    for (obj in gameObjects) {
+        //alert(obj);
+        createGameObjectUI(obj, gameObjects[obj]);        
+        //alert(res[1]);
+    }
+    jQuery( "#tabs" ).tabs();
+}
+
+//jQuery('#status').html(processingMsg);
+$(document).ready(function(){
+    bws_getGameObjects();
+});
+</script>
+<body bgcolor="#000000">
+<div id='tabs'>
+<ul></ul>
+</div>
+</body>
+</html>
