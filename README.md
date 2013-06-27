@@ -33,27 +33,11 @@ An HTTP client can communicate to BLE to change a status of a property of an obj
 
 ### 3.1 Starting the server ###
 
-An example can be started with:
+An example can be started by loading the example.blend file in Blender:
 
     blender example-sphere-with-debug-mode.blend
 
-on the command line. This will report the following lines:
-
-    connect failed: No such file or directory
-    found bundled python: /opt/blender/.../python
-    read blend: /.../example-sphere-with-debug-mode.blend
-
-and the Blender GUI will appear. Choose **Start Game Engine** from the **Game** menu. The following will appear on the command line:
-
-    Detected GL_ARB_texture_env_combine
-    Detected GL_ARB_texture_cube_map
-    Detected GL_ARB_multitexture
-    Detected GL_ARB_shader_objects
-    Detected GL_ARB_vertex_shader
-    Detected GL_ARB_fragment_shader
-    Detected GL_ARB_vertex_program
-    Detected GL_ARB_depth_texture
-    Detected GL_EXT_separate_specular_color
+Choose **Start Game Engine** from the **Game** menu. The following will appear on the command line:
 
     Blender Game Engine Started
     INITIALISING
@@ -70,29 +54,15 @@ and the Blender GUI will appear. Choose **Start Game Engine** from the **Game** 
     Server running in thread...
     Serving on port 8000...
     
+Now open your browser and point it at http://localhost:8000
+
 See enabling-debug-mode-for-object.png on how to enable debugging for an object and debug mode in BLE.
-
-
-### 3.2 Stopping the server ###
-
-Pressing `CTRL+ESC` will stop the BGE. The application can be stopped with `CTRL+Q` or `ALT+F4`.
-
-
-### 3.3 Starting the client ###
-
-TODO
-
-
-### 3.4 Stopping the client ###
-
-Close the browser with `CTRL+Q ` or `ALT+F4`.
-
 
 ### 3.5 Dependencies ###
 
-This HTTP server runs in BLE so it needs at least an installation of Blender and Python3. Also WebOb is needed which is included here. For more information on WebOb and to upgrade, please see https://pypi.python.org/pypi/WebOb/
+This HTTP server runs in the Blender Game Engine (BGE) so it needs at least an installation of Blender and Python3. Also WebOb is needed which is included here. For more information on WebOb and to upgrade, please see https://pypi.python.org/pypi/WebOb/
 
-The appie.py that offers class z25_restMapper is maintained in another repository of z25. Contact z25 for submitting improvements of receiving an updated version.
+The appie.py that offers class z25_restMapper is maintained in another repository of z25. Contact z25 for submitting improvements or receiving an updated version.
 
 
 ### 3.6 To do ###
@@ -123,9 +93,9 @@ One small improvement that needs to be made is for the next situation. After sta
 
 the following people have contributed to this software:
 
-* HTTP server in Python: Arnaud Loonstra <arnaud@z25.org>
-* Example client in Mobile jQuery: Roderick Gadellaa <roderick@z25.org>
-* Refactoring and publication on GitHub: Pander <pander@users.sourceforge.net>
+* Arnaud Loonstra <arnaud@z25.org>
+* Roderick Gadellaa <roderick@z25.org>
+* Pander <pander@users.sourceforge.net>
 
 
 5 Contact
@@ -138,4 +108,4 @@ T: http://twitter.com/z25org
 F: http://fb.com/z25org  
 G: http://gplus.to/z25  
 L: http://linkedin.com/company/z25  
-S: https://github.com/z25/z25-blender-http-server  
+S: https://github.com/z25/BgeHttpServer  
