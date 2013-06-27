@@ -33,9 +33,7 @@ An HTTP client can communicate to BGE to change a status of a property of an obj
 
 ### 3.1 Starting the server ###
 
-An example can be started by loading the example.blend file in Blender:
-
-    blender example-sphere-with-debug-mode.blend
+An example can be started by loading the example.blend file in Blender. 
 
 Choose **Start Game Engine** from the **Game** menu. The following will appear on the command line:
 
