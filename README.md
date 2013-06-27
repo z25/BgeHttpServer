@@ -28,7 +28,7 @@ Objects in a Blender scene that needs controlling have to have two sensors, each
 
 This module is found in `threadingController.py` which uses class `serverThread` from `threadedHttpWsgiServer.py`. Uses the `z25_restMapper` class from `appie.py` to start an HTTP server on port 8000. This server is constructed with an instance of class `blendedRest` from `blendRest.py`. Note that the Blender scene file and these Python files need to be in the same directory.
 
-An HTTP client can communicate to BLE to change a status of a property of an object but it can not read out the status of an object at the moment.
+An HTTP client can communicate to BGE to change a status of a property of an object but it can not read out the status of an object at the moment.
 
 
 ### 3.1 Starting the server ###
@@ -56,7 +56,7 @@ Choose **Start Game Engine** from the **Game** menu. The following will appear o
     
 Now open your browser and point it at http://localhost:8000
 
-See enabling-debug-mode-for-object.png on how to enable debugging for an object and debug mode in BLE.
+See enabling-debug-mode-for-object.png on how to enable debugging for an object and debug mode in BGE.
 
 ### 3.5 Dependencies ###
 
